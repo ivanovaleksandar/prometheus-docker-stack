@@ -1,0 +1,4 @@
+data
+
+#Vagrant always creates .log files
+*.log

@@ -1,0 +1,75 @@
+version: "3"
+services:
+
+  prometheus:
+    image: prom/prometheus
+    restart: always
+    ports:
+      - "9090:9090"
+    volumes:
+      - "./config:/config"
+      - "./data/prometheus_data:/data"
+    command: -config.file=/config/prometheus/prometheus.yml -storage.local.path=/data -storage.local.retention=100h alertmanager.url=http://alertmanager:9093
+    
+  alertmanager:
+    image: prom/alertmanager
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./config:/config
+      - "./data/alertmanager_data:/data"
+    restart: always
+    command: -config.file=/config/alertmanager/alertmanager.yml -storage.path=/data
+
+  alertlogger:
+    build: alertlogger
+    restart: always
+    ports:
+      - "9092:8088"
+    env_file:
+      - ./configs/docker/environments.env
+    volumes:
+      - "./data/alertlogger:/data"
+
+  blackbox_exporter:
+    image: prom/blackbox-exporter
+    ports:
+      - "9115:9115"
+    restart: always
+    volumes:
+      - "./config:/config"
+    command: --config.file=/config/blackbox.yml
+
+  cadvisor:
+    image: google/cadvisor
+    ports:
+      - "9092:8080"
+    restart: always
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:rw"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+      - "/cgroup:/cgroup:ro"
+    privileged: true # Enable privileged mode to bypass permissions rights for RHEL docker hosts
+
+  grafana:
+    image: grafana/grafana
+    volumes:
+      - "./data/grafana_data:/var/lib/grafana"
+    env_file:
+      - ./configs/docker/environments.env
+    restart: unless-stopped
+    ports:
+      - "9091:3000"
+
+
+# Create these volumes if you want to store data in volumes instead of mounting the data to a directory
+# volumes:
+#   prometheus_data:
+#   grafana_data:
+#   alertmanager_data:
+
+
+

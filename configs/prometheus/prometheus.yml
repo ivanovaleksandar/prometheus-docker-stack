@@ -1,0 +1,56 @@
+global:
+  evaluation_interval: 15s
+  scrape_timeout: 15s
+  scrape_interval: 20s
+
+rule_files:
+  - "/config/prometheus/prometheus.rules"
+
+scrape_configs:
+
+  - job_name: tools
+    scrape_interval: 5s
+    scrape_timeout: 10s
+    metrics_path: /ping
+    params:
+      module: [icmp]
+    file_sd_configs:
+      - files: ['/config/prometheus/tools_targets.yml']
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+        replacement: ${1}
+
+  # - job_name: applications
+  #   metrics_path: /probe
+  #   scheme: http
+  #   params:
+  #     module: [http_2xx]
+  #   file_sd_configs:
+  #     - files: ['/config/application_targets.yml']
+  #   relabel_configs:
+  #     - source_labels: [__address__]
+  #       target_label: __param_target
+  #       regex: (.*?)(:80)
+  #     - source_labels: [__param_target]
+  #       target_label: instance
+  #     - source_labels: []
+  #       target_label: __address__
+  #       replacement: blackbox_exporter:9115
+
+  - job_name: applications
+    metrics_path: /probe
+    scheme: https
+    params:
+      module: [http_2xx]
+    file_sd_configs:
+      - files: ['/config/prometheus/apps_targets.yml']
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: (.*?)(:80)
+        target_label: __param_target
+        replacement: http://${1}
+      - source_labels: [__address__]
+        regex: (.*?)(:443)
+        target_label: __param_target
+        replacement: https://${1}
