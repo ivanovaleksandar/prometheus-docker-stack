@@ -4,3 +4,4 @@
   - cadvisor
   - alertmanager
   - grafana
+  - node_exporter

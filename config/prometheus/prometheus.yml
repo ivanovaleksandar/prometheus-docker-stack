@@ -7,6 +7,17 @@ rule_files:
   - "/config/prometheus/prometheus.rules"
 
 scrape_configs:
+  - job_name: 'cadvisor'
+    scrape_interval: 5s
+    scrape_timeout: 4s
+    static_configs:
+      - targets: ['cadvisor:8080']
+  
+  - job_name: 'node-exporter'
+    scrape_interval: 5s
+    scrape_timeout: 4s
+    static_configs:
+      - targets: ['node_exporter:9100']  
 
   - job_name: tools
     scrape_interval: 20s

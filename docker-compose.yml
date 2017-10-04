@@ -34,7 +34,7 @@ services:
   cadvisor:
     image: google/cadvisor
     ports:
-      - "9092:8080"
+      - "8080:8080"
     restart: always
     volumes:
       - "/:/rootfs:ro"
@@ -45,6 +45,17 @@ services:
       - "/cgroup:/cgroup:ro"
     privileged: true # Enable privileged mode to bypass permissions rights for RHEL docker hosts
 
+  node_exporter:
+    image: prom/node-exporter
+    ports:
+      - "9100:9100"
+    restart: always
+    volumes:
+      - "/proc:/host/proc:ro"
+      - "/sys:/host/sys:ro"
+      - "/:/rootfs:ro"
+    privileged: true # Enable privileged mode to bypass permissions rights for RHEL docker hosts
+
   grafana:
     image: grafana/grafana
     volumes:
@@ -53,10 +64,10 @@ services:
       - ./config/docker/environments.env
     restart: unless-stopped
     ports:
-      - "9091:3000"
+      - "3000:3000"
 
 
-# Create these volumes if you want to store data in volumes instead of mounting the data to a directory
+# Create these volumes if you want to store data in volumes instead of mounting the data onto a directory
 volumes:
   prometheus_data:
   grafana_data:
