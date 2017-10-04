@@ -59,3 +59,10 @@ compose-pip:
 compose:
   pip.installed:
     - name: docker-compose
+
+docker-group:
+  group.present:
+    - name: docker
+    - system: True
+    - addusers:
+      - ubuntu

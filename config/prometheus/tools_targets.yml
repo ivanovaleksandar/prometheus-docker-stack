@@ -3,5 +3,4 @@
   - blackbox_exporter
   - cadvisor
   - alertmanager
-  - alertlogger
   - grafana

@@ -1,0 +1,52 @@
+global:
+  evaluation_interval: 45s
+  scrape_timeout: 15s
+  scrape_interval: 30s
+
+rule_files:
+  - "/config/prometheus/prometheus.rules"
+
+scrape_configs:
+
+  - job_name: tools
+    scrape_interval: 20s
+    scrape_timeout: 10s
+    metrics_path: /probe
+    params:
+      module: [icmp]
+    file_sd_configs:
+      - files: ['/config/prometheus/tools_targets.yml']
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: (.*)(:80)?
+        replacement: ${1}
+        target_label: __param_target
+      - source_labels: [__param_target]
+        regex: (.*)
+        replacement: ${1}
+        target_label: instance        
+      - source_labels: []
+        regex: (.*)
+        target_label: __address__
+        replacement: blackbox_exporter:9115  # Blackbox exporter.
+
+  - job_name: applications
+    metrics_path: /probe
+    scheme: http
+    params:
+      module: [http_2xx]
+    file_sd_configs:
+      - files: ['/config/prometheus/apps_targets.yml']
+    relabel_configs:
+      - source_labels: [__address__]
+        regex: (.*)
+        replacement: ${1}
+        target_label: __param_target
+      - source_labels: [__param_target]
+        regex: (.*)
+        replacement: ${1}
+        target_label: instance        
+      - source_labels: []
+        regex: (.*)
+        target_label: __address__
+        replacement: blackbox_exporter:9115  # Blackbox exporter.

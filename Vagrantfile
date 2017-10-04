@@ -7,7 +7,7 @@ Vagrant.configure(VAGRANT_API_VERSION) do |config|
 
   config.vm.define :prometheus_stack do |prometheus_stack|
     prometheus_stack.vm.box = 'ubuntu/xenial64'
-    prometheus_stack.vm.host_name = 'prometheus_stack'
+    prometheus_stack.vm.host_name = 'prometheus.local'
     prometheus_stack.vm.synced_folder 'saltstack/salt', '/srv/salt'
     prometheus_stack.vm.network 'private_network', ip: '192.168.10.50'
 

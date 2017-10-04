@@ -1,0 +1,16 @@
+ALERT SiteDown
+  IF probe_success{job="applications"} < 1
+  FOR 1m
+  LABELS { severity = "page" }
+  ANNOTATIONS {
+    summary="site down: {{$labels.instance}}",
+    description="site {{$labels.instance}} is down more than 1m."
+  }
+
+ALERT ContainerDown
+  IF probe_success{job="tools"} < 1
+  FOR 10s
+  ANNOTATIONS {
+    summary="Container down: {{$labels.instance}}",
+    description="Container {{$labels.instance}} is down more than 10s. Check why the container did not restart by itself!!!"
+  }

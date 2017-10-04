@@ -1,4 +1,4 @@
 data
-
+.vagrant
 #Vagrant always creates .log files
 *.log
