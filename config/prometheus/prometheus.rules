@@ -3,8 +3,8 @@ ALERT SiteDown
   FOR 1m
   LABELS { severity = "page" }
   ANNOTATIONS {
-    summary="site down: {{$labels.instance}}",
-    description="site {{$labels.instance}} is down more than 1m."
+    summary="{{$labels.instance}} webpage is down",
+    description="Site {{$labels.instance}} is down for more than 1m"
   }
 
 ALERT ContainerDown
@@ -12,5 +12,49 @@ ALERT ContainerDown
   FOR 10s
   ANNOTATIONS {
     summary="Container down: {{$labels.instance}}",
-    description="Container {{$labels.instance}} is down more than 10s. Check why the container did not restart by itself!!!"
+    description="Container {{$labels.instance}} is down more than 10s"
+  }
+
+ALERT NodeCPUUsage
+  IF (100 - (avg by (instance) (irate(node_cpu{name="node-exporter",mode="idle"}[5m])) * 100)) > 75
+  FOR 2m
+  LABELS {
+    severity="page"
+  }
+  ANNOTATIONS {
+    SUMMARY = "{{$labels.instance}}: High CPU usage detected",
+    DESCRIPTION = "{{$labels.instance}}: CPU usage is above 75% (current value is: {{ $value }})"
+  }
+
+ALERT NodeLoadAverage
+  IF ((node_load5 / count without (cpu, mode) (node_cpu{mode="system"})) > 1)
+  FOR 2m
+  LABELS {
+    severity="page"
+  }
+  ANNOTATIONS {
+    SUMMARY = "{{$labels.instance}}: High LA detected",
+    DESCRIPTION = "{{$labels.instance}}: LA is high"
+  }
+
+ALERT NodeMemoryUsage
+  IF (((node_memory_MemTotal-node_memory_MemFree-node_memory_Cached)/(node_memory_MemTotal)*100)) > 75
+  FOR 2m
+  LABELS {
+    severity="page"
+  }
+  ANNOTATIONS {
+    SUMMARY = "{{$labels.instance}}: High memory usage detected",
+    DESCRIPTION = "{{$labels.instance}}: Memory usage is above 75% (current value is: {{ $value }})"
+  }
+
+ALERT NodeLowRootDisk
+  IF ((node_filesystem_size{mountpoint="/"} - node_filesystem_free{mountpoint="/"} ) / node_filesystem_size{mountpoint="/"} * 100) > 75
+  FOR 2m
+  LABELS {
+    severity="page"
+  }
+  ANNOTATIONS {
+    SUMMARY = "{{$labels.instance}}: Low root disk space",
+    DESCRIPTION = "{{$labels.instance}}: Root disk usage is above 75% (current value is: {{ $value }})"
   }
