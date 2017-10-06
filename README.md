@@ -75,16 +75,17 @@ Grafana is a tool that used for visulaization of variety of paramethers, metrics
 
 Go to your browser to `http://<vagrant-ip>:3000`, the same IP that was set-up previously for the virtual machine *(default: 192.168.10.50)*
 Login with user/password credentials ***admin/admin***. 
-[Grafana Login](img/grafana_login_screen.png)
+![Grafana Login](img/grafana_login_screen.png)
 
 Then, connect Prometheus as the **Data Source** for Grafana.
-[Grafana Menu](img/grafana_data_source_menu.png) [Prometheus Config](grafana_data_source_prometheus.png)
+
+![Grafana Menu](img/grafana_data_source_menu.png) ![Prometheus Config](grafana_data_source_prometheus.png)
 
 After successful connection with Prometheus, import the already prepared Grafana [dashboards](config/grafana)
 
-[Dashboard Menu](img/grafana_dashboard_import.png)
+![Dashboard Menu](img/grafana_dashboard_import.png)
 
-[Node Exporter](img/grafana-dashboard-1.png)
+![Node Exporter](img/grafana-dashboard-1.png)
 **Node Exporter** metrics:
 * Alerts table and graph 
 * Node idle time on every CPU
@@ -93,7 +94,7 @@ After successful connection with Prometheus, import the already prepared Grafana
 * Node Disk Usage graph and meter
 * Node network transmitet and received Data
 
-[cAdvisor Exporter](img/grafana-dashboard-2.png)
+![cAdvisor Exporter](img/grafana-dashboard-2.png)
 **cAdvisor Docker Host Exporter** metrics:
 * Number of running containers on the Host 
 * Docker Host memory and CPU usage graphs and number stats
