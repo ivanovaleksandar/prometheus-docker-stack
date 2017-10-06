@@ -109,6 +109,6 @@ Already finished tasks:
 - [x] Docker-Compose file
 
 Future tasks:
-- [] Salt formula for auto-starting and maintaining Docker containers as service
-- [] More Grafana dashboards
-- [] More Alert definitions
+- [ ] Salt formula for auto-starting and maintaining Docker containers as service
+- [ ] More Grafana dashboards
+- [ ] More Alert definitions
